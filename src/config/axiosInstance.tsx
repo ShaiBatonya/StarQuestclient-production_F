@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 import { paths } from '@/routes/paths';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://52.213.57.198:6550',
+  baseURL: 'http://52.213.57.198:6550/api',
   headers: {
     'Content-Type': 'application/json',
   },
