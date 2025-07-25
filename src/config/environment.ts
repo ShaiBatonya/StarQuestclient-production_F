@@ -47,26 +47,26 @@ export const validateEnvironment = (): void => {
   });
 
   if (missingVars.length > 0) {
-    console.warn('Missing environment variables:', missingVars);
+    console.warn('❌ Missing environment variables:', missingVars);
   }
 
-  // Log current configuration in development
-  if (IS_DEVELOPMENT) {
-    console.log('StarQuest Environment Configuration:', {
-      API_BASE_URL: env.API_BASE_URL,
-      NODE_ENV: env.NODE_ENV,
-      IS_DEVELOPMENT: env.IS_DEVELOPMENT,
-      IS_PRODUCTION: env.IS_PRODUCTION,
-    });
-  }
-}; 
+  // ALWAYS log configuration in production for debugging
+  console.log('🚀 StarQuest Environment Configuration:', {
+    API_BASE_URL: env.API_BASE_URL,
+    NODE_ENV: env.NODE_ENV,
+    IS_DEVELOPMENT: env.IS_DEVELOPMENT,
+    IS_PRODUCTION: env.IS_PRODUCTION,
+    VITE_API_BASE_URL: import.meta.env?.VITE_API_BASE_URL || 'NOT SET',
+    'import.meta.env.NODE_ENV': import.meta.env?.NODE_ENV || 'NOT SET',
+  });
 
-export const config = {
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://api.starquest.app/api',
-  NODE_ENV: import.meta.env.NODE_ENV || 'development',
-  IS_DEVELOPMENT: import.meta.env.NODE_ENV === 'development',
-  IS_PRODUCTION: import.meta.env.NODE_ENV === 'production',
-} as const;
+  // Validate that API_BASE_URL includes /api
+  if (!env.API_BASE_URL.includes('/api')) {
+    console.error('🚨 CRITICAL: API_BASE_URL missing /api suffix:', env.API_BASE_URL);
+  } else {
+    console.log('✅ API_BASE_URL correctly configured with /api suffix');
+  }
+};
 
 /**
  * PRODUCTION DEPLOYMENT NOTES:

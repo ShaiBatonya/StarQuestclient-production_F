@@ -8,6 +8,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useEffect } from 'react';
 import { useAuthStore } from '@/store/auth';
 import Index from '@/routes';
+import { EnvironmentDebug } from '@/components/debug/EnvironmentDebug';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,6 +64,8 @@ function AppContent() {
           closeButton
           richColors
         />
+        {/* Temporary debug component for production troubleshooting */}
+        <EnvironmentDebug />
       </div>
     </ErrorBoundary>
   );
