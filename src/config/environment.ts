@@ -8,7 +8,7 @@ interface EnvironmentConfig {
 
 // Default configuration values
 const DEFAULT_CONFIG = {
-  API_BASE_URL: 'https://api.starquest.app',
+  API_BASE_URL: 'https://api.starquest.app/api',
   NODE_ENV: 'development',
 };
 
@@ -62,11 +62,28 @@ export const validateEnvironment = (): void => {
 }; 
 
 export const config = {
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://api.starquest.app',
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://api.starquest.app/api',
   NODE_ENV: import.meta.env.NODE_ENV || 'development',
   IS_DEVELOPMENT: import.meta.env.NODE_ENV === 'development',
   IS_PRODUCTION: import.meta.env.NODE_ENV === 'production',
 } as const;
+
+/**
+ * PRODUCTION DEPLOYMENT NOTES:
+ * 
+ * For production builds, ensure the following environment variables are set:
+ * 
+ * VITE_API_BASE_URL=https://api.starquest.app/api
+ * NODE_ENV=production
+ * 
+ * The /api prefix is CRITICAL for all API requests to work correctly.
+ * 
+ * Local development example:
+ * VITE_API_BASE_URL=http://localhost:3000/api
+ * 
+ * All API services inherit from BaseApiService which uses this configuration.
+ * Direct fetch calls and axiosInstance also use this base URL.
+ */
 
 // TODO: PRODUCTION EMAIL CONFIGURATION REQUIRED
 // ============================================

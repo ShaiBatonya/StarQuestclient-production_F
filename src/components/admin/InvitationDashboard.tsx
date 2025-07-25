@@ -27,6 +27,7 @@ import {
   useSendWorkspaceInvitation
 } from '@/hooks/useAdmin';
 import { toast } from 'sonner';
+import { API_BASE_URL } from '@/config/environment';
 
 interface InvitationDashboardProps {
   searchTerm: string;
@@ -81,7 +82,7 @@ export const InvitationDashboard: React.FC<InvitationDashboardProps> = ({ search
   const testInvitationAPI = async () => {
     try {
       console.log('🧪 Testing invitation API directly...');
-      const response = await fetch('/api/invitations/pending', {
+      const response = await fetch(`${API_BASE_URL}/invitations/pending`, {
         method: 'GET',
         credentials: 'include',
         headers: {
