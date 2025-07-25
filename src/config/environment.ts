@@ -8,7 +8,7 @@ interface EnvironmentConfig {
 
 // Default configuration values
 const DEFAULT_CONFIG = {
-  API_BASE_URL: 'https://api.starquest.app/api',
+  API_BASE_URL: 'https://starquest.app',
   NODE_ENV: 'development',
 };
 
@@ -62,7 +62,7 @@ export const validateEnvironment = (): void => {
 }; 
 
 export const config = {
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://api.starquest.app/api',
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://starquest.app',
   NODE_ENV: import.meta.env.NODE_ENV || 'development',
   IS_DEVELOPMENT: import.meta.env.NODE_ENV === 'development',
   IS_PRODUCTION: import.meta.env.NODE_ENV === 'production',
