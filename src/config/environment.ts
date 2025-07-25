@@ -16,7 +16,7 @@ interface EnvironmentConfig {
  * Ensures the API base URL ends with '/api'
  */
 function ensureApiSuffix(url: string): string {
-  if (!url) return 'https://api.starquest.app';
+  if (!url) return 'https://api.starquest.app/api';
   
   // Remove trailing slash if present
   const cleanUrl = url.replace(/\/$/, '');
