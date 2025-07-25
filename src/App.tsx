@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { useAuthStore } from '@/store/auth';
 import Index from '@/routes';
 import { EnvironmentDebug } from '@/components/debug/EnvironmentDebug';
+import { IS_DEVELOPMENT } from '@/config/environment';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,8 +65,8 @@ function AppContent() {
           closeButton
           richColors
         />
-        {/* Temporary debug component for production troubleshooting */}
-        <EnvironmentDebug />
+        {/* Environment debug panel - only visible in development */}
+        {IS_DEVELOPMENT && <EnvironmentDebug />}
       </div>
     </ErrorBoundary>
   );
