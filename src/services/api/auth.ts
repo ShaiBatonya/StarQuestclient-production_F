@@ -121,4 +121,14 @@ export class AuthService extends BaseApiService {
     const response = await this.api.post('/auth/resend-verification', { email });
     return response.data;
   }
+
+  /**
+   * Accept workspace invitation
+   * Endpoint: POST /workspace/accept-invitation/:token
+   * Returns: { status: 'success', message: 'Successfully joined workspace', data: { workspaceName: string } }
+   */
+  public async acceptInvitation(token: string): Promise<BackendResponse<{ workspaceName?: string }>> {
+    const response = await this.api.post(`/workspace/accept-invitation/${token}`);
+    return response.data;
+  }
 } 

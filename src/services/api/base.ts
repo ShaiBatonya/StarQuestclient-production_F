@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import { ApiResponse } from '@/types';
 import { API_BASE_URL } from '@/config/environment';
+import { paths } from '@/routes/paths';
 
 export class ApiError extends Error {
   constructor(
@@ -53,8 +54,14 @@ export abstract class BaseApiService {
       (response) => response,
       async (error: AxiosError) => {
         if (error.response?.status === 401) {
-          // Handle unauthorized access
-          window.location.href = '/login';
+          // Clear auth state and redirect to login (consistent with standalone axiosInstance)
+          localStorage.removeItem('starquest-auth');
+          document.cookie = 'jwt=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          
+          // Avoid multiple redirects
+          if (window.location.pathname !== paths.login) {
+            window.location.href = paths.login;
+          }
           return Promise.reject(new ApiError('Session expired', 401));
         }
 

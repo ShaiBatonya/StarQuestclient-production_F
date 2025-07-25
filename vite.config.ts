@@ -61,8 +61,8 @@ export default defineConfig({
   css: {
     devSourcemap: false,
   },
-  // Enable gzip compression
+  // Enable production debugging while optimizing bundle size
   esbuild: {
-    drop: ['console', 'debugger'], // Remove console logs in production
+    drop: ['debugger'], // Remove debugger statements but keep console for production debugging
   },
 })
