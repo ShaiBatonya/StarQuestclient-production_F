@@ -13,6 +13,7 @@ import {
 import { isToday } from '@/utils';
 import { useReportsStore } from '@/store/reports';
 import { ReportType, Report } from '@/types/Report';
+import { IS_DEVELOPMENT } from '@/config/environment';
 
 // Helper to normalize DailyReport to Report
 function normalizeDailyReport(d: any): Report {
@@ -42,7 +43,7 @@ export const useAllDailyReports = () => {
         const response = await reportsService.getAllDailyReports();
         
         // Debug logging in development
-        if (process.env.NODE_ENV === 'development') {
+        if (IS_DEVELOPMENT) {
           console.log('Daily Reports API Response:', response);
         }
         
@@ -51,9 +52,11 @@ export const useAllDailyReports = () => {
           const data = Array.isArray(response.data) ? response.data : [];
           const normalized = data.map(normalizeDailyReport);
           setReports(normalized); // Sync Zustand
-          console.log('[useAllDailyReports] Synced Zustand with backend', normalized);
+          if (IS_DEVELOPMENT) {
+            console.log('[useAllDailyReports] Synced Zustand with backend', normalized);
+          }
           
-          if (process.env.NODE_ENV === 'development') {
+          if (IS_DEVELOPMENT) {
             console.log('Daily Reports Data (processed):', data);
           }
           
@@ -127,7 +130,9 @@ export const useCreateDailyReport = () => {
       const response = await reportsService.createDailyReport(data);
       if (response.status === 'success' && response.data) {
         addReport(normalizeDailyReport(response.data)); // Sync Zustand
-        console.log('[useCreateDailyReport] Added report to Zustand', response.data);
+        if (IS_DEVELOPMENT) {
+          console.log('[useCreateDailyReport] Added report to Zustand', response.data);
+        }
         return response.data;
       }
       throw new Error(response.message || 'Failed to create daily report');
@@ -152,7 +157,9 @@ export const useUpdateDailyReport = () => {
       const response = await reportsService.updateDailyReport(reportId, data);
       if (response.status === 'success' && response.data) {
         updateReport(normalizeDailyReport(response.data)); // Sync Zustand
-        console.log('[useUpdateDailyReport] Updated report in Zustand', response.data);
+        if (IS_DEVELOPMENT) {
+          console.log('[useUpdateDailyReport] Updated report in Zustand', response.data);
+        }
         return response.data; // This is a DailyReport
       }
       throw new Error(response.message || 'Failed to update daily report');

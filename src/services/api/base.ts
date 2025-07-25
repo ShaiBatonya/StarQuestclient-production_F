@@ -21,15 +21,6 @@ export abstract class BaseApiService {
   protected readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
   constructor(baseURL: string = API_BASE_URL) {
-    // Debug logging for production troubleshooting
-    console.log('🏗️ BaseApiService constructor called with:', {
-      providedBaseURL: baseURL,
-      API_BASE_URL_constant: API_BASE_URL,
-      'import.meta.env.VITE_API_BASE_URL': import.meta.env?.VITE_API_BASE_URL,
-      'import.meta.env.NODE_ENV': import.meta.env?.NODE_ENV,
-      finalBaseURL: baseURL,
-    });
-
     this.api = axios.create({
       baseURL,
       withCredentials: true,
@@ -37,9 +28,6 @@ export abstract class BaseApiService {
         'Content-Type': 'application/json',
       },
     });
-
-    // Log the actual axios instance configuration
-    console.log('⚙️ Axios instance created with baseURL:', this.api.defaults.baseURL);
 
     this.cache = new Map();
 

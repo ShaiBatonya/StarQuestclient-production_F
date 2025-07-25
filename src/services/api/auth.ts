@@ -98,19 +98,7 @@ export class AuthService extends BaseApiService {
    * Returns: { status: 'success', data: User }
    */
   public async getCurrentUser(): Promise<CurrentUserResponse> {
-    console.log('🔍 AuthService.getCurrentUser called');
-    console.log('🔍 BaseURL being used:', this.api.defaults.baseURL);
-    console.log('🔍 Full URL will be:', `${this.api.defaults.baseURL}/users/me`);
-    
     const response = await this.api.get('/users/me');
-    
-    console.log('✅ AuthService.getCurrentUser response received:', {
-      status: response.status,
-      url: response.config?.url,
-      baseURL: response.config?.baseURL,
-      fullURL: `${response.config?.baseURL}${response.config?.url}`,
-    });
-    
     return response.data;
   }
 

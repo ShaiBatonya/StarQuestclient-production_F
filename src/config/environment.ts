@@ -1,72 +1,93 @@
-// Environment configuration for StarQuest application
+/**
+ * Environment Configuration for StarQuest Application
+ * 
+ * This module provides a centralized configuration for environment variables
+ * and ensures proper API base URL configuration with /api prefix.
+ */
+
 interface EnvironmentConfig {
   API_BASE_URL: string;
-  NODE_ENV: string;
   IS_DEVELOPMENT: boolean;
   IS_PRODUCTION: boolean;
+  MODE: string;
 }
 
-// Default configuration values
-const DEFAULT_CONFIG = {
-  API_BASE_URL: 'https://api.starquest.app/api',
-  NODE_ENV: 'development',
-};
+/**
+ * Ensures the API base URL ends with '/api'
+ */
+function ensureApiSuffix(url: string): string {
+  if (!url) return 'https://api.starquest.app/api';
+  
+  // Remove trailing slash if present
+  const cleanUrl = url.replace(/\/$/, '');
+  
+  // Add /api if not already present
+  if (!cleanUrl.endsWith('/api')) {
+    return `${cleanUrl}/api`;
+  }
+  
+  return cleanUrl;
+}
 
-// Create environment configuration based on environment variables or defaults
-const createEnvironmentConfig = (): EnvironmentConfig => {
-  // Check for Vite environment variables first, then fall back to defaults
-  const apiBaseUrl = import.meta.env?.VITE_API_BASE_URL || DEFAULT_CONFIG.API_BASE_URL;
-  const nodeEnv = import.meta.env?.NODE_ENV || DEFAULT_CONFIG.NODE_ENV;
+/**
+ * Create environment configuration based on Vite environment variables
+ */
+function createEnvironmentConfig(): EnvironmentConfig {
+  const mode = import.meta.env.MODE || 'development';
+  const apiBaseUrl = ensureApiSuffix(
+    import.meta.env.VITE_API_BASE_URL || 'https://api.starquest.app'
+  );
   
   return {
     API_BASE_URL: apiBaseUrl,
-    NODE_ENV: nodeEnv,
-    IS_DEVELOPMENT: nodeEnv === 'development',
-    IS_PRODUCTION: nodeEnv === 'production',
+    IS_DEVELOPMENT: mode === 'development',
+    IS_PRODUCTION: mode === 'production',
+    MODE: mode,
   };
-};
+}
 
 // Export the configured environment
-export const env = createEnvironmentConfig();
+const env = createEnvironmentConfig();
 
 // Export individual values for convenience
-export const {
-  API_BASE_URL,
-  NODE_ENV,
-  IS_DEVELOPMENT,
-  IS_PRODUCTION,
-} = env;
+export const { API_BASE_URL, IS_DEVELOPMENT, IS_PRODUCTION, MODE } = env;
 
-// Helper function to validate required environment variables
-export const validateEnvironment = (): void => {
-  const requiredVars = ['API_BASE_URL'];
+/**
+ * Professional environment logging function
+ */
+export function logEnvironment(): void {
+  const config = {
+    Environment: MODE,
+    'API Base URL': API_BASE_URL,
+    'Development Mode': IS_DEVELOPMENT,
+    'Production Mode': IS_PRODUCTION,
+  };
   
-  const missingVars = requiredVars.filter(varName => {
-    const value = env[varName as keyof EnvironmentConfig];
-    return !value || value === '';
+  console.group('🚀 StarQuest Environment Configuration');
+  Object.entries(config).forEach(([key, value]) => {
+    const icon = key === 'API Base URL' ? '🌐' : 
+                 key === 'Environment' ? '⚙️' : 
+                 key.includes('Mode') ? (value ? '✅' : '❌') : '📋';
+    console.log(`${icon} ${key}:`, value);
   });
-
-  if (missingVars.length > 0) {
-    console.warn('❌ Missing environment variables:', missingVars);
+  console.groupEnd();
+  
+  // Validate API configuration
+  if (!API_BASE_URL.includes('/api')) {
+    console.error('🚨 CRITICAL: API_BASE_URL missing /api suffix');
   }
+}
 
-  // ALWAYS log configuration in production for debugging
-  console.log('🚀 StarQuest Environment Configuration:', {
-    API_BASE_URL: env.API_BASE_URL,
-    NODE_ENV: env.NODE_ENV,
-    IS_DEVELOPMENT: env.IS_DEVELOPMENT,
-    IS_PRODUCTION: env.IS_PRODUCTION,
-    VITE_API_BASE_URL: import.meta.env?.VITE_API_BASE_URL || 'NOT SET',
-    'import.meta.env.NODE_ENV': import.meta.env?.NODE_ENV || 'NOT SET',
-  });
-
-  // Validate that API_BASE_URL includes /api
-  if (!env.API_BASE_URL.includes('/api')) {
-    console.error('🚨 CRITICAL: API_BASE_URL missing /api suffix:', env.API_BASE_URL);
-  } else {
-    console.log('✅ API_BASE_URL correctly configured with /api suffix');
+/**
+ * Validate required environment variables
+ */
+export function validateEnvironment(): void {
+  logEnvironment();
+  
+  if (!API_BASE_URL) {
+    console.warn('⚠️ API_BASE_URL not configured, using default');
   }
-};
+}
 
 /**
  * PRODUCTION DEPLOYMENT NOTES:
@@ -74,9 +95,8 @@ export const validateEnvironment = (): void => {
  * For production builds, ensure the following environment variables are set:
  * 
  * VITE_API_BASE_URL=https://api.starquest.app/api
- * NODE_ENV=production
  * 
- * The /api prefix is CRITICAL for all API requests to work correctly.
+ * The /api suffix is CRITICAL for all API requests to work correctly.
  * 
  * Local development example:
  * VITE_API_BASE_URL=http://localhost:3000/api

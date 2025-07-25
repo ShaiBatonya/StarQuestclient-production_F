@@ -4,7 +4,7 @@ import App from '@/App.tsx';
 import '@/index.css';
 import { validateEnvironment } from '@/config/environment';
 
-// Validate environment configuration on startup
+// Validate and log environment configuration on startup
 validateEnvironment();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
