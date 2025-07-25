@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 import { paths } from '@/routes/paths';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'https://starquest.app',
+  baseURL: 'https://api.starquest.app',
   headers: {
     'Content-Type': 'application/json',
   },
